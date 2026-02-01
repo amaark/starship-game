@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://deosin4no07x5"]
+
+[ext_resource type="PackedScene" uid="uid://dpb5wkxa6a28w" path="res://scenes/Starship.tscn" id="1_kqs1s"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_32lhk"]
+normal = Vector2(0, 1)
+distance = -324.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_d1c63"]
+normal = Vector2(-1, 0)
+distance = -576.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kqs1s"]
+distance = -324.0
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_7g83o"]
+normal = Vector2(1, 0)
+distance = -576.0
+
+[node name="World" type="Node2D" unique_id=1751607254]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1369273612]
+
+[node name="WorldBorder" type="StaticBody2D" parent="." unique_id=1800222694]
+
+[node name="North" type="CollisionShape2D" parent="WorldBorder" unique_id=1761690445]
+shape = SubResource("WorldBoundaryShape2D_32lhk")
+
+[node name="East" type="CollisionShape2D" parent="WorldBorder" unique_id=1527847273]
+shape = SubResource("WorldBoundaryShape2D_d1c63")
+
+[node name="South" type="CollisionShape2D" parent="WorldBorder" unique_id=1332020358]
+shape = SubResource("WorldBoundaryShape2D_kqs1s")
+
+[node name="West" type="CollisionShape2D" parent="WorldBorder" unique_id=425423756]
+shape = SubResource("WorldBoundaryShape2D_7g83o")
+
+[node name="Starship" parent="." unique_id=1438195711 instance=ExtResource("1_kqs1s")]
