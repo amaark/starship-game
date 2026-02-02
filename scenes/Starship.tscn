@@ -4,11 +4,15 @@
 [ext_resource type="Texture2D" uid="uid://ox33etqfijr2" path="res://assets/starship.png" id="1_hbxx7"]
 
 [node name="Starship" type="RigidBody2D" unique_id=1438195711]
-inertia = 5.0
+mass = 10.0
 script = ExtResource("1_gunj8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1076110369]
 texture = ExtResource("1_hbxx7")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1902259443]
-polygon = PackedVector2Array(-1, -8, 1, -8, 8, 8, 5, 8, 1, 5, -1, 5, -5, 8, -8, 8)
+polygon = PackedVector2Array(0, -8, 8, 8, 0, 5, -8, 8)
+
+[node name="DodgeCooldown" type="Timer" parent="." unique_id=230989535]
+wait_time = 0.5
+one_shot = true
