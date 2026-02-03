@@ -5,6 +5,7 @@
 
 [node name="Starship" type="RigidBody2D" unique_id=1438195711]
 mass = 10.0
+linear_damp = 1.0
 script = ExtResource("1_gunj8")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1076110369]
@@ -15,4 +16,7 @@ polygon = PackedVector2Array(0, -8, 8, 8, 0, 5, -8, 8)
 
 [node name="DodgeCooldown" type="Timer" parent="." unique_id=230989535]
 wait_time = 0.5
+one_shot = true
+
+[node name="BoostCooldown" type="Timer" parent="." unique_id=1860542597]
 one_shot = true
