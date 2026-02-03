@@ -13,39 +13,47 @@ const DODGE_THRUST := Vector2(2000, 0)
 const BOOST_THRUST := Vector2(0, -4000)
 const TORQUE := 2000
 var active_state := STATE.NORMAL
-var dodge_direction := Vector2(0, 0)
+var phys_state: PhysicsDirectBodyState2D
+var is_boosting := false
 
 
-func _integrate_forces(phys_state: PhysicsDirectBodyState2D) -> void:
+func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
+	phys_state = state
 	match active_state:
 		STATE.NORMAL:
-			handle_movement(phys_state)
-			handle_dodge(phys_state)
-			if Input.is_action_pressed("boost") and boost_cooldown.time_left == 0:
+			handle_movement()
+			handle_dodge()
+			if Input.is_action_just_pressed("boost") and boost_cooldown.time_left == 0:
 				phys_state.apply_central_impulse(BOOST_THRUST.rotated(rotation))
 				switch_state(STATE.BOOST)
 		STATE.BOOST:
 			if Input.is_action_just_released("boost"):
 				switch_state(STATE.NORMAL)
 			else:
-				handle_boost(phys_state)
-				handle_dodge(phys_state)
+				handle_boost()
+				handle_dodge()
 		STATE.DODGE:
-			switch_state(STATE.NORMAL)
-			handle_movement(phys_state)
+			if is_boosting:
+				switch_state(STATE.BOOST)
+			else:
+				switch_state(STATE.NORMAL)
 
 
 func switch_state(new_state: STATE) -> void:
+	var previous_state := active_state
 	active_state = new_state
 
 	match active_state:
+		STATE.NORMAL:
+			is_boosting = false
+			boost_cooldown.start()
 		STATE.DODGE:
 			dodge_cooldown.start()
 		STATE.BOOST:
-			boost_cooldown.start()
+			is_boosting = true
 
 
-func handle_movement(phys_state: PhysicsDirectBodyState2D, thrust: Vector2 = THRUST) -> void:
+func handle_movement() -> void:
 	var thrust_direction = 0
 	var rotation_direction = 0
 
@@ -58,11 +66,11 @@ func handle_movement(phys_state: PhysicsDirectBodyState2D, thrust: Vector2 = THR
 	if Input.is_action_pressed("turn_left"):
 		rotation_direction -= 1
 
-	phys_state.apply_force(thrust_direction * thrust.rotated(rotation))
+	phys_state.apply_force(thrust_direction * THRUST.rotated(rotation))
 	phys_state.apply_torque(rotation_direction * TORQUE)
 
 
-func handle_boost(phys_state: PhysicsDirectBodyState2D) -> void:
+func handle_boost() -> void:
 	var rotation_direction = 0
 
 	if Input.is_action_pressed("turn_right"):
@@ -74,7 +82,7 @@ func handle_boost(phys_state: PhysicsDirectBodyState2D) -> void:
 	phys_state.apply_torque(rotation_direction * TORQUE)
 
 
-func handle_dodge(phys_state: PhysicsDirectBodyState2D) -> void:
+func handle_dodge() -> void:
 	if dodge_cooldown.time_left > 0:
 		return
 	if Input.is_action_just_pressed("dodge_right"):
